@@ -1,10 +1,12 @@
 <?php
+namespace Routeria\Tests;
+
 require_once 'bootstrap.php';
 
 use Routeria\RouteCollection;
 use Routeria\Route;
 
-class RouteCollectionTest extends PHPUnit_Framework_TestCase
+class RouteCollectionTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{

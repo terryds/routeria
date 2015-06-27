@@ -1,8 +1,9 @@
 <?php
+namespace Routeria\Tests;
 
 use Routeria\Route;
 
-class RouteTest extends PHPUnit_Framework_TestCase
+class RouteTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @param  string $string     The path string to translate to regex

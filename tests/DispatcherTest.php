@@ -1,5 +1,7 @@
 <?php
 
+namespace Routeria\Tests;
+
 use Routeria\Dispatcher;
 use Routeria\RouteCollection;
 use Routeria\Router;
@@ -7,7 +9,7 @@ use Routeria\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Dispatch\ControllerDispatch;
 
-class DispatcherTest extends PHPUnit_Framework_TestCase
+class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
@@ -74,8 +76,8 @@ class DispatcherTest extends PHPUnit_Framework_TestCase
 
 	public function testControllerDispatch()
 	{
-		$controller = new FakeController;
-		$this->collection->addRoute(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod')));
+		$controller = new \Routeria\TestHelper\FakeController;
+		$this->collection->addRoute(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod', 'id')));
 		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
 							->disableOriginalConstructor()
 							->getMock();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Routeria\Tests;
+namespace Routeria\TestHelper;
 
 class FakeController
 {

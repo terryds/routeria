@@ -10,7 +10,7 @@ class ControllerDispatch extends AbstractDispatch
 
 	private $dependencies = array();
 
-	public function __construct($controller, $action, array $params = array())
+	public function __construct($controller, $action, $params= array())
 	{
 		if (!is_string($controller) && !is_object($controller)) {
 			throw new \InvalidArgumentException(sprintf('Controller must be a class name or an object, given: %s', gettype($controller)));
@@ -24,7 +24,14 @@ class ControllerDispatch extends AbstractDispatch
 		if (!method_exists($controller, $action)) {
 			throw new \BadMethodCallException(sprintf('The controller doesnot have this method: %s', $action));
 		}
+		if (!is_string($params) && !is_array($params)) {
+			throw new \InvalidArgumentException(sprintf('Parameters must be either string or array, given: %s', gettype($params)));
+		}
 
+		if (is_string($params)) {
+			$params = (array)$params;
+		}
+		
 		$this->controller = $controller;
 		$this->action = $action;
 		$this->params = $params;
@@ -85,6 +92,10 @@ class ControllerDispatch extends AbstractDispatch
 	public function dispatch(RouterInterface $router)
 	{
 		$controller = $this->_buildController();
-		call_user_func_array(array($this->controller, $this->method), $this->params);
+		$params = array();
+		foreach ($this->params as $param) {
+			$params[] = $router->getParam($param);
+		}
+		call_user_func_array(array($this->controller, $this->action), $params);
 	}
 }
