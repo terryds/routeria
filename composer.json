@@ -1,0 +1,28 @@
+{
+	"name": "terrydjony/routeria",
+	"description": "A simple fast yet powerful PHP router",
+	"version": "0.9.0-dev",
+	"require": "symfony/http-foundation",
+	"license": "MIT",
+	"authors": [
+			{
+				"name": "Terry Djony",
+				"email": "capthook321@gmail.com",
+				"role": "developer"
+			}
+		],
+	"require": {
+		"symfony/http-foundation": "2.7.*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "4.7.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"": "src/",
+			"Routeria\\": "src/routeria",
+			"Regex\\": "src/regex",
+			"Routeria\\Dispatch\\": "src/dispatch"
+		}
+	}
+}
