@@ -55,9 +55,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$request->expects($this->once())
 				->method('getMethod')
 				->will($this->returnValue($httpMethod));
-		$this->router->route($request);
 		$this->expectOutputString($message);
-		$this->dispatcher->dispatch();
+		$this->dispatcher->dispatch($request);
 	}
 
 	public function providerTestDispatchWillCallTheCallback()
@@ -87,8 +86,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$request->expects($this->once())
 				->method('getMethod')
 				->will($this->returnValue('GET'));
-		$this->router->route($request);
 		$this->expectOutputString('Hello user id: 55');
-		$this->dispatcher->dispatch();
+		$this->dispatcher->dispatch($request);
 	}
 }

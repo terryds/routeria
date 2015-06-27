@@ -1,5 +1,6 @@
 <?php
 namespace Routeria;
+use Symfony\Component\HttpFoundation\Request;
 
 class Dispatcher implements DispatcherInterface
 {
@@ -10,8 +11,9 @@ class Dispatcher implements DispatcherInterface
 		$this->router = $router;
 	}
 
-	public function dispatch()
+	public function dispatch(Request $request)
 	{
+		$this->router->route($request);
 		$callback = $this->router->getCallback();
 		$callback($this->router);
 	}
