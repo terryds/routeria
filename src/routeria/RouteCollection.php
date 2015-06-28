@@ -5,14 +5,7 @@ class RouteCollection implements RouteCollectionInterface
 {
 	private $routes = array();
 
-	public function add($pattern, $callback, $httpMethod = 'GET', $translator = null)
-	{
-		$route = new Route($pattern, $callback, $httpMethod, $translator);
-		$this->routes[] = $route;
-		return $route;
-	}
-
-	public function addRoute(RouteInterface $route)
+	public function add(RouteInterface $route)
 	{
 		$this->routes[] = $route;
 		return $route;
@@ -22,7 +15,7 @@ class RouteCollection implements RouteCollectionInterface
 	{
 		foreach ($routes as $route)
 		{
-			$this->addRoute($route);
+			$this->add($route);
 		}
 	}
 

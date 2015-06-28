@@ -10,9 +10,23 @@ class Router implements RouterInterface
 	private $params = array();
 	private $callback;
 
-	public function __construct(RouteCollectionInterface $collection)
+	public function __construct($collection = null)
 	{
+		if (isset($collection) && !$collection instanceOf RouteCollectionInterface) {
+			throw new InvalidArgumentException(sprintf('The $collection argument must implement RouteCollectionInterface, given: %s', implode(', ', class_implements($collection))));
+		}
+		if (!isset($collection)) {
+			$collection = new RouteCollection;
+		}
+		if ($collection instanceOf CustomCollectionInterface) {
+			$collection->initialize();
+		}
 		$this->collection = $collection;
+	}
+
+	public function add(RouteInterface $route)
+	{
+		$this->collection->add($route);
 	}
 
 	public function route(Request $request)

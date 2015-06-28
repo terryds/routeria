@@ -20,13 +20,13 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
 
 	public function testAddMethodWillReturnRouteObject()
 	{
-		$route = $this->collection->add('/',function() {});
+		$route = $this->collection->add(new Route('/',function() {}));
 		$this->assertInstanceOf('Routeria\Route', $route);
 	}
 
 	public function testAddRouteToProperty()
 	{
-		$route = $this->collection->add('/',function() {});
+		$route = $this->collection->add(new Route('/',function() {}));
 		$this->assertAttributeContains($route, 'routes',$this->collection);
 	}
 
@@ -53,7 +53,7 @@ class RouteCollectionTest extends \PHPUnit_Framework_TestCase
 	public function testRemoveARoute($routeCollection)
 	{
 		$route = new Route('/user/{id:int}', function() {});
-		$routeCollection->addRoute($route);
+		$routeCollection->add($route);
 		$routeCollection->remove('/user/123123');
 		$this->assertAttributeNotContains($route, 'routes', $routeCollection);
 	}

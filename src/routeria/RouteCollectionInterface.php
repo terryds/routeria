@@ -3,7 +3,7 @@ namespace Routeria;
 
 interface RouteCollectionInterface extends \Countable, \IteratorAggregate
 {
-	public function addRoute(RouteInterface $route);
+	public function add(RouteInterface $route);
 	public function addRoutes(array $routes);
 	public function remove($path, $httpMethod);
 	public function get($path, $httpMethod);

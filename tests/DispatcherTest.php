@@ -31,10 +31,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
 		$routeCollection = new RouteCollection();
 		foreach ($routesGET as $pattern => $callback) {
-			$routeCollection->add($pattern, $callback);
+			$routeCollection->add(new Route($pattern, $callback));
 		}
 		foreach ($routesPOST as $pattern => $callback) {
-			$routeCollection->add($pattern, $callback, 'POST');
+			$routeCollection->add(new Route($pattern, $callback, 'POST'));
 		}
 		$this->collection = $routeCollection;
 		$this->router = new Router($this->collection);
@@ -76,7 +76,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 	public function testControllerDispatch()
 	{
 		$controller = new \Routeria\TestHelper\FakeController;
-		$this->collection->addRoute(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod', 'id')));
+		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod', 'id')));
 		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
 							->disableOriginalConstructor()
 							->getMock();

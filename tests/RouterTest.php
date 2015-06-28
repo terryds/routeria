@@ -27,10 +27,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
 		$routeCollection = new RouteCollection();
 		foreach ($routesGET as $pattern => $callback) {
-			$routeCollection->add($pattern, $callback);
+			$routeCollection->add(new Route($pattern, $callback));
 		}
 		foreach ($routesPOST as $pattern => $callback) {
-			$routeCollection->add($pattern, $callback, 'POST');
+			$routeCollection->add(new Route($pattern, $callback, 'POST'));
 		}
 		$this->collection = $routeCollection;
 		$this->router = new Router($routeCollection);
@@ -109,7 +109,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$request->expects($this->once())
 				->method('getMethod')
 				->will($this->returnValue('GET'));
-		$this->collection->addRoute(new Route('/threads/{title:alpha}', function() {}))
+		$this->collection->add(new Route('/threads/{title:alpha}', function() {}))
 						->convert('title',function($param) {
 									return str_replace('-', ' ', $param);
 									}

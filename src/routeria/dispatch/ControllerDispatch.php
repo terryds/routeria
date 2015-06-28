@@ -2,7 +2,7 @@
 namespace Routeria\Dispatch;
 use Routeria\RouterInterface;
 
-class ControllerDispatch extends AbstractDispatch
+class ControllerDispatch extends Dispatch
 {
 	private $controller;
 	private $action;
