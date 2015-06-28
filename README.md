@@ -22,7 +22,7 @@ The installed Routeria and all of the components is in the `vendor` folder.
 In order to use it, you just need to require the autoload.  
 And, you need to load the namespace using `use` keyword.  
 
-```
+```php
 require_once __DIR__ '/vendor/autoload.php';
 ```
 
@@ -41,7 +41,7 @@ RewriteRule ^ index.php [QSA,L]
 
 For a simple callback route, you just need to use Route, Router and Dispatcher classes like below.  
 The Request component of Symfony HttpFoundation is required to tell the request path to the router.
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -56,7 +56,7 @@ $dispatcher->dispatch($request);
 
 ###Using Named Parameters
 
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -78,7 +78,7 @@ If you go to the relative path `/user/1`, it will yell `Hello User with ID: 1`
 
 As default, the HTTP Method is 'GET'.  
 But, if you want to use other HTTP method, you can specify it as the third argument of `Route` class.
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -103,7 +103,7 @@ The `ControllerDispatch` class expects 3 parameters, which are the controller wh
 Notice that the argument is the named parameter.  
 Just pass it as the second argument of `Route` class, and _voila!_ It will call the controller and dispatch the method with given parameters.
 
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -126,7 +126,7 @@ If the request path is `/user/3`, it will call the `UserController` and dispatch
 You can use `inject($dependency)` method in the `ControllerDispatch` to inject a dependency, and `injectDependencies(array $dependencies)` to inject an array of dependencies.
 
 For PHP 5.4, you can:
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -146,7 +146,7 @@ $dispatcher->dispatch($request);
 ```
 
 But, with PHP 5.3, you must specify the controller dispatch before.
-```
+```php
 use Symfony\Component\HttpFoundation\Request;
 use Routeria\Route;
 use Routeria\Router;
@@ -166,7 +166,7 @@ $dispatcher->dispatch($request);
 
 If you want to modify a param by a function, you can use `convert($name, $converter)` method on Route class **or** after adding a `Route` on `RouteCollection` class
 
-```
+```php
 use Routeria\RouteCollection;
 use Routeria\Route;
 
@@ -181,7 +181,7 @@ With this convertion, the dashes will be converted to space before parameter `ti
 ###Using custom route collection
 If you want to use custom route collection, such as this `BlogCollection`.  
 You must make it extend the `CustomCollection` class.
-```
+```php
 use Routeria\Route;
 use Routeria\CustomCollection;
 
@@ -197,7 +197,7 @@ class BlogCollection extends CustomCollection
 ```
 
 Then, just inject it in the `Router` class.
-```
+```php
 use Routeria\Router;
 $router = new Router(new BlogCollection);
 ```
