@@ -20,7 +20,7 @@ class Dispatcher implements DispatcherInterface
 		}
 		else
 		{
-			throw new Exception('No route found for this path');
+			throw new \Exception('No route found for this path');
 		}
 
 	}
