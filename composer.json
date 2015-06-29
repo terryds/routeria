@@ -1,7 +1,6 @@
 {
 	"name": "terrydjony/routeria",
 	"description": "A simple fast yet powerful PHP router",
-	"version": "0.9.0-dev",
 	"keywords": ["routing", "router"],
 	"require": "symfony/http-foundation",
 	"license": "MIT",
