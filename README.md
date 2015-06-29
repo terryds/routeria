@@ -12,7 +12,7 @@ To install Routeria, you just need to add this to your `composer.json`:
 
 ```
 	"require": {
-		"terrydjony\routeria": "1.0.*"
+		"terrydjony\routeria": "1.*@dev"
 	}
 ```
 
@@ -23,7 +23,7 @@ In order to use it, you just need to require the autoload.
 And, you need to load the namespace using `use` keyword.  
 
 ```php
-require_once __DIR__ '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 ```
 
 

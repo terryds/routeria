@@ -13,8 +13,15 @@ class Dispatcher implements DispatcherInterface
 
 	public function dispatch(Request $request)
 	{
-		$this->router->route($request);
-		$callback = $this->router->getCallback();
-		$callback($this->router);
+		if ($this->router->route($request))
+		{
+			$callback = $this->router->getCallback();
+			$callback($this->router);
+		}
+		else
+		{
+			throw new Exception('No route found for this path');
+		}
+
 	}
 }
