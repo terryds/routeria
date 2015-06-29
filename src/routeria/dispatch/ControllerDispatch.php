@@ -83,7 +83,7 @@ class ControllerDispatch extends Dispatch
 			}
 			else
 			{
-				$controller = new $this->controllerName;
+				$controller = new $this->controller;
 			}
 		}
 		return $controller;
