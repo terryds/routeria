@@ -73,7 +73,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 			);
 	}
 
-	public function testControllerDispatch()
+	public function testControllerDispatchWithControllerObject()
 	{
 		$controller = new \Routeria\TestHelper\FakeController;
 		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod', 'id')));
@@ -88,5 +88,21 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 				->will($this->returnValue('GET'));
 		$this->expectOutputString('Hello user id: 55');
 		$this->dispatcher->dispatch($request);
+	}
+
+	public function testControllerDispatchWithControllerName()
+	{
+		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch('\Routeria\TestHelper\FakeController', 'fakeMethod', 'id')));
+		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+							->disableOriginalConstructor()
+							->getMock();
+		$request->expects($this->once())
+				->method('getPathInfo')
+				->will($this->returnValue('/testController/55'));
+		$request->expects($this->once())
+				->method('getMethod')
+				->will($this->returnValue('GET'));
+		$this->expectOutputString('Hello user id: 55');
+		$this->dispatcher->dispatch($request, true);
 	}
 }

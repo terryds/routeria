@@ -107,10 +107,6 @@ class Route implements RouteInterface
 		{
 			throw new \InvalidArgumentException('Invalid type for $callback, closure or invokable object expected');
 		}
-		if (method_exists($callback, 'toClosure'))
-		{
-			$this->callback = $callback->toClosure();
-		}
 		else 
 		{
 			$this->callback = $callback;

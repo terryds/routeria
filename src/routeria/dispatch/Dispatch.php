@@ -10,12 +10,4 @@ abstract class Dispatch implements DispatchInterface
 	{
 		$this->dispatch($router);
 	}
-
-	public function toClosure()
-	{
-		$func = function($router) {
-			$this->dispatch($router);
-		};
-		return $func;
-	}
 }

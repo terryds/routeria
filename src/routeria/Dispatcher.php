@@ -11,7 +11,7 @@ class Dispatcher implements DispatcherInterface
 		$this->router = $router;
 	}
 
-	public function dispatch(Request $request)
+	public function dispatch(Request $request, $vardump = FALSE)
 	{
 		if ($this->router->route($request))
 		{
@@ -22,6 +22,5 @@ class Dispatcher implements DispatcherInterface
 		{
 			throw new \Exception('No route found for this path');
 		}
-
 	}
 }
