@@ -99,7 +99,7 @@ If the HTTP Method is `POST` and the path is `user/5` then, it will output `Send
 ###Dispatching Controller
 
 If you want to dispatch a controller via router, you can use `ControllerDispatch` class.  
-The `ControllerDispatch` class expects 3 parameters, which are the controller which can be an object **or** a controller name string, the method name, and the **optional** parameter which is an **array** of arguments.  
+The `ControllerDispatch` class expects 3 parameters, which are the controller which can be an object **or** a controller name  for a static call, the method name, and the **optional** parameter which is an **array** of arguments.  
 Notice that the argument is the named parameter.  
 Just pass it as the second argument of `Route` class, and _voila!_ It will call the controller and dispatch the method with given parameters.
 
