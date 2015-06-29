@@ -73,7 +73,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 			);
 	}
 
-	public function testControllerDispatchWithControllerObject()
+	public function testControllerDispatch()
 	{
 		$controller = new \Routeria\TestHelper\FakeController;
 		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch($controller, 'fakeMethod', 'id')));
@@ -90,9 +90,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 		$this->dispatcher->dispatch($request);
 	}
 
-	public function testControllerDispatchWithControllerName()
+	public function testControllerDispatchStaticMethod()
 	{
-		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch('\Routeria\TestHelper\FakeController', 'fakeMethod', 'id')));
+		$this->collection->add(new Route('/testController/{id:int}', new ControllerDispatch('\Routeria\TestHelper\FakeController', 'fakeStaticMethod', 'id')));
 		$request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
 							->disableOriginalConstructor()
 							->getMock();

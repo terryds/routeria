@@ -8,4 +8,9 @@ class FakeController
 	{
 		echo 'Hello user id: '.$fakeID;
 	}
+
+	public static function fakeStaticMethod($fakeID)
+	{
+		echo 'Hello user id: '.$fakeID;
+	}
 }

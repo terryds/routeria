@@ -32,7 +32,7 @@ class ControllerDispatch extends Dispatch
 			$params = (array)$params;
 		}
 		
-		$this->controller = $this->_buildController($controller);
+		$this->controller = $controller;
 		$this->action = $action;
 		$this->params = $params;
 	}
@@ -70,31 +70,22 @@ class ControllerDispatch extends Dispatch
 
 	protected function _buildController($controller)
 	{
-		if (is_object($controller))
+		$controller = $this->controller;
+		if (count($this->dependencies))
 		{
-			return $controller;
-		}
-		else
-		{
-			if (count($this->dependencies))
-			{
-				$reflect = new ReflectionClass($class);
-				$controller = $reflect->newInstanceArgs($this->dependencies);
-			}
-			else
-			{
-				$controller = new $controller;
-			}
+			$reflect = new ReflectionClass($class);
+			$controller = $reflect->newInstanceArgs($this->dependencies);
 		}
 		return $controller;
 	}
 
 	public function dispatch(RouterInterface $router)
 	{
+		$controller = $this->_buildController($this->controller);
 		$params = array();
 		foreach ($this->params as $param) {
 			$params[] = $router->getParam($param);
 		}
-		call_user_func_array(array($this->controller, $this->action), $params);
+		call_user_func_array(array($controller, $this->action), $params);
 	}
 }
