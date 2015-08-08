@@ -1,26 +1,10 @@
 <?php
 namespace Routeria;
-use Symfony\Component\HttpFoundation\Request;
 
-class Dispatcher implements DispatcherInterface
+class Dispatcher
 {
-	private $router;
-
-	public function __construct(RouterInterface $router)
+	public function dispatch(Task $task)
 	{
-		$this->router = $router;
-	}
-
-	public function dispatch(Request $request, $vardump = FALSE)
-	{
-		if ($this->router->route($request))
-		{
-			$callback = $this->router->getCallback();
-			$callback($this->router);
-		}
-		else
-		{
-			throw new \Exception('No route found for this path');
-		}
+		$task->run($this);
 	}
 }

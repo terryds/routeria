@@ -8,13 +8,10 @@ class Translator implements TranslatorInterface
 	const ALPHA = '[a-zA-Z_-]+';
 	const ALNUM = '[a-zA-Z0-9_-]+';
 
-	public function translate($string)
+	public static function translate($string)
 	{
-		if (!is_string($string)) {
-			throw new \InvalidArgumentException();
-		}
 		if (!defined(__CLASS__ . '::' . strtoupper($string))) {
-			return $string;
+			throw new RuntimeException(sprintf('Translation not found for %s', $string));
 		}
 		else
 		{

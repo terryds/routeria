@@ -2,41 +2,60 @@
 
 namespace Routeria;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class Router implements RouterInterface
 {
-	private $collection;
-	private $params = array();
-	private $callback;
+	private $routes = array();
 
-	public function __construct($collection = null)
+	private $ioc;
+
+	public function __construct(RouteProviderInterface $provider)
 	{
-		if (isset($collection) && !$collection instanceOf RouteCollectionInterface) {
-			throw new InvalidArgumentException(sprintf('The $collection argument must implement RouteCollectionInterface, given: %s', implode(', ', class_implements($collection))));
-		}
-		if (!isset($collection)) {
-			$collection = new RouteCollection;
-		}
-		if ($collection instanceOf CustomCollectionInterface) {
-			$collection->initialize();
-		}
-		$this->collection = $collection;
+		$provider->register($this);
 	}
 
-	public function add(RouteInterface $route)
+	public function setIOC($ioc)
 	{
-		$this->collection->add($route);
+		if ($ioc instanceOf Ion\Container)
+		{
+		 	$this->ion = $ioc;
+		}
+		else
+		{
+			throw new \InvalidArgumentException('The inversion of control class must be an instance of Ion\Container');
+		}
 	}
 
-	public function route(Request $request)
+	public function add($pattern, $route, $method)
 	{
-		$path = $request->getPathInfo();
-		$httpMethod = strtoupper($request->getMethod());
-		$routes = $this->collection;
+		$this->routes[] = new Route($pattern, $route, $method);
+	}
+
+	public function get($pattern, $route)
+	{
+		$this->routes[] = new Route($pattern, $route, 'GET');
+	}
+
+	public function post($pattern, $route)
+	{
+		$this->routes[] = new Route($pattern, $route, 'POST');
+	}
+
+	public function put($pattern, $route)
+	{
+		$this->routes[] = new Route($pattern, $route, 'PUT');
+	}
+
+	public function delete($pattern, $route)
+	{
+		$this->routes[] = new Route($pattern, $route, 'DELETE');
+	}
+
+	public function getRoute($path, $httpMethod = 'GET')
+	{
+		$routes = $this->routes;
 		foreach ($routes as $route)
 		{
-			if (preg_match($route->getPattern(), $path, $matches) && in_array($httpMethod, $route->getHttpMethod() ))
+			if (preg_match($route->getPattern(), $path, $matches) && in_array($httpMethod, $route->getHttpMethods() ))
 			{
 				unset($matches[0]);
 				if($converters = $route->getConverters()) {
@@ -46,42 +65,9 @@ class Router implements RouterInterface
 						}				
 					}
 				}
-				$this->callback = $route->getCallback();
-				$this->params = $matches;
-				return TRUE;
+				return new Task($route->getCallback(), $matches);
 			}
 		}
 		return FALSE;
-	}
-
-	public function getParam($key)
-	{
-		if (!is_string($key)) {
-			throw new \InvalidArgumentException(sprintf('$key must be string, given : %s', gettype($key)));
-		}
-		return (isset($this->params[$key])) ? $this->params[$key] : null;
-	}
-
-	public function setParam($key, $value)
-	{
-		$this->params[$key] = $value;
-	}
-
-	public function getParams()
-	{
-		return $this->params;
-	}
-
-	public function setCallback($callback)
-	{
-		if (!is_callable($callback)) {
-			throw new InvalidArgumentException(sprintf('$callback must be callable, given: %s', gettype($callback)));
-		}
-		$this->callback = $callback;
-	}
-
-	public function getCallback()
-	{
-		return $this->callback;
 	}
 }
