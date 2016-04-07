@@ -1,1 +1,5 @@
 /vendor
+/nbproject/private/
+.htaccess
+index.php
+Controller.php
