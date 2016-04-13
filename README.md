@@ -4,7 +4,9 @@ Routeria is a lightweight and easy-to-use routing component.
 
 ## Installing
 Routeria installation using Composer  
-`composer require terrydjony/routeria ~1,0`
+```
+composer require terrydjony/routeria ~1,0
+```
 
 ## Usage
 
