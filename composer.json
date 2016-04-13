@@ -1,13 +1,13 @@
 {
 	"name": "terrydjony/routeria",
 	"description": "A simple fast yet powerful PHP router",
-	"keywords": ["routing", "router"],
+	"keywords": ["routing", "router", "url router"],
 	"require": "symfony/http-foundation",
 	"license": "MIT",
 	"authors": [
 			{
 				"name": "Terry Djony",
-				"email": "capthook321@gmail.com",
+				"email": "ironknight321@gmail.com",
 				"role": "developer"
 			}
 		],

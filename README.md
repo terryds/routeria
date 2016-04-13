@@ -1,22 +1,12 @@
-#Routeria Router
+# Routeria
 
-A simple fast yet powerful PHP router
+Routeria is a lightweight and easy-to-use routing component.
 
-##Why Routeria Router?
-Because, it's designed to be simple, flexible, and also extensible.  
-It follows the Dependency Inversion Principles.
+## Installing
+Routeria installation using Composer  
+`composer require terrydjony/routeria ~1,0`
 
-##Installation
-
-To install Routeria, you just need to add this to your `composer.json`:
-
-```
-	"require": {
-		"terrydjony\routeria": "1.*@dev"
-	}
-```
-
-##Usage
+## Usage
 
 The installed Routeria and all of the components is in the `vendor` folder.  
 In order to use it, you just need to require the autoload.  
@@ -27,7 +17,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 ```
 
 
-###Configuration (.htaccess)
+### Configuration (.htaccess)
 
 Before using Routeria, you need to turn your rewrite engine on and add rules so any requests to non-existing directory or filename will be rewritten to index.php.
 ```
@@ -37,171 +27,147 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
 ```
 
-###Simple Callback Routing
+### Simple Callback Routing
 
-For a simple callback route, you just need to use Route, Router and Dispatcher classes like below.  
+For a simple callback route, you just need to use `Routeria` class which belongs to the `Routeria` namespace.  
 The Request component of Symfony HttpFoundation is required to tell the request path to the router.
 ```php
 use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
+use Routeria\Routeria;
 
-$request = Request::createFromFlobals();
-$router = new Router;
-$router->add(new Route('/', function() { echo 'Hello World'; }));
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
+$request = Request::createFromGlobals();
+$router = new Routeria;
+$router->get('/', function() { echo 'Hello World';});
+
+$router->route($request->getPathInfo(), $request->getMethod());
 ```
 
-###Using Named Parameters
+Don't forget to write line `->route($request->getPathInfo(), $request->getMethod());` to make it work
+
+### Using Named Parameters
 
 ```php
 use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
+use Routeria\Routeria;
 
-$request = Request::createFromFlobals();
-$router = new Router;
-$router->add(new Route('/user/{id:int}', function($router) {
-                        echo 'Hello User with ID: ' . $router->getParam('id'); 
-                    })
-            );
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
+$request = Request::createFromGlobals();
+$router = new Routeria;
+$callback = function($fname, $lname) {
+  echo "Hello $fname $lname. Nice to meet ya!";
+};
+$router->get('/greet/{fname:alpha}/{lname:alpha}', $callback);
+
+$router->route($request->getPathInfo(), $request->getMethod());
 ```
 
-If you go to the relative path `/user/1`, it will yell `Hello User with ID: 1`
+The order of parameters in the callback doesn't matter.  
+You just need to specify all the necessary variables.  
+  
+There are six placeholders available,  
+`INT` for integers (regex: [0-9]+)  
+`ALPHA` for alphabets (regex: [a-zA-Z_-]+)  
+`ALNUM` for alphanumeric characters (regex: [a-zA-Z0-9_-]+)  
+`HEX` for hexadecimals (regex: [0-9A-F]+)  
+`ALL` for all characters (regex: .+)  
+`WORD` is an alias for `ALPHA`
 
-###Routing with specific HTTP Method
 
-As default, the HTTP Method is 'GET'.  
-But, if you want to use other HTTP method, you can specify it as the third argument of `Route` class.
+### Routing with specific HTTP Method
+
+You can also perform other http methods routing easily. (even the custom one)
 ```php
 use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
+use Routeria\Routeria;
 
-$request = Request::createFromFlobals();
-$router = new Router;
-$router->add(new Route('/user/{id:int}', function($router) {
-                        echo 'Sending user data.. ID: ' . $router->getParam('id'); 
-                    }, 'POST')
-            );
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
+$request = Request::createFromGlobals();
+$router = new Routeria;
+$router->get('/', function() { echo 'HTTP METHOD : GET';});
+$router->post('/', function() { echo 'HTTP METHOD : POST';});
+$router->put('/', function() { echo 'HTTP METHOD : PUT';});
+$router->delete('/', function() { echo 'HTTP METHOD : DELETE';});
+$router->add('/', function() { echo 'HTTP METHOD : CUSTOM';}, 'CUSTOM');
+
+$router->route($request->getPathInfo(), $request->getMethod());
 ```
 
-If the HTTP Method is `POST` and the path is `user/5` then, it will output `Sending user data.. ID: 5`.
+Different method, different route.
 
-###Dispatching Controller
+### Dispatch Controller
 
-If you want to dispatch a controller via router, you can use `ControllerDispatch` class.  
-The `ControllerDispatch` class expects 3 parameters, which are the controller which can be an object **or** a controller name  for a static call, the method name, and the **optional** parameter which is an **array** of arguments.  
-Notice that the argument is the named parameter.  
-Just pass it as the second argument of `Route` class, and _voila!_ It will call the controller and dispatch the method with given parameters.
+You can also dispatch a controller using Routeria.
 
 ```php
 use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
-use Routeria\Dispatch\ControllerDispatch;
+use Routeria\Routeria;
 
-$request = Request::createFromFlobals();
-$router = new Router;
-$router->add(new Route('/user/{id:int}',
-             new ControllerDispatch( new UserController, 'getByID', array('id'))
-            );
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
-```
-
-If the request path is `/user/3`, it will call the `UserController` and dispatch `getByID(3)`
-
-###Dispatching Controller with Dependencies
-
-You can use `inject($dependency)` method in the `ControllerDispatch` to inject a dependency, and `injectDependencies(array $dependencies)` to inject an array of dependencies.
-
-For PHP 5.4, you can:
-```php
-use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
-use Routeria\Dispatch\ControllerDispatch;
-
-$request = Request::createFromFlobals();
-$router = new Router;
-$router->add(new Route(
-                '/user/{id:int}',
-                (new ControllerDispatch( new UserController, 'getByID', array('id')))
-                ->inject(new UserMapper());
-             )
-            );
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
-```
-
-But, with PHP 5.3, you must specify the controller dispatch before.
-```php
-use Symfony\Component\HttpFoundation\Request;
-use Routeria\Route;
-use Routeria\Router;
-use Routeria\Dispatcher;
-use Routeria\Dispatch\ControllerDispatch;
-
-$request = Request::createFromFlobals();
-$router = new Router;
-$controllerDispatch = new ControllerDispatch(new UserController, 'getByID', array('id'));
-$controllerDispatch->inject(new UserMapper());
-$router->add(new Route('user/{id:int}', $controllerDispatch));
-$dispatcher = new Dispatcher($router);
-$dispatcher->dispatch($request);
-```
-
-###Modify the parameters before using it
-
-If you want to modify a param by a function, you can use `convert($name, $converter)` method on Route class **or** after adding a `Route` on `RouteCollection` class
-
-```php
-use Routeria\RouteCollection;
-use Routeria\Route;
-
-$collection = new RouteCollection;
-$collection->add(new Route('/threads/{title:alpha}', function() {}))					           ->convert('title',function($param) {
-	return str_replace('-', ' ', $param);
-});
-```
-
-With this convertion, the dashes will be converted to space before parameter `title` is fetched.
-
-###Using custom route collection
-If you want to use custom route collection, such as this `BlogCollection`.  
-You must make it extend the `CustomCollection` class.
-```php
-use Routeria\Route;
-use Routeria\CustomCollection;
-
-class BlogCollection extends CustomCollection
-{
-   public function initialize()
-   {
-       $this->add(new Route('/', ControllerDispatch('BlogController','listAll');
-       $this->add(new Route('/{id:int}', ControllerDispatch('BlogController','listByID', 'id');
-        $this->add(new Route('/{title:alpha}', ControllerDispatch('BlogController','listByTitle', 'title');
-   }
+class User {
+  public function getInfo($id, $name) {
+    echo 'Hello ' . $name . ' ID: ' . $id;
+  }
 }
+
+$request = Request::createFromGlobals();
+$router = new Routeria;
+$router->get('/user/{name:alpha}/{id:int}', 'User::getInfo');
+$router->route($request->getPathInfo(), $request->getMethod());
 ```
 
-Then, just inject it in the `Router` class.
+If you go to '/user/terry/35', the router will dispatch the getInfo method so it prints 'Hello terry ID: 35'.  
+Don't forget to specify the namespace if the class has.
+
+### Converting arguments
+
 ```php
-use Routeria\Router;
-$router = new Router(new BlogCollection);
+use Symfony\Component\HttpFoundation\Request;
+use Routeria\Routeria;
+
+$request = Request::createFromGlobals();
+$router = new Routeria;
+$router->get('/posts/{title:alpha}', function($title) { echo '<h1>'.$title.'</h1>';})
+    ->convert(function(title) {
+      return ucwords(str_replace('-', ' ', $title));
+    });
+$router->route($request->getPathInfo(), $request->getMethod());
 ```
 
-##Contribute to this library
+The converter in this example changes all hypens into spaces in the title argument.  
+So, if you go to '/posts/lorem-ipsum-dolor-sit-amet', it will print '<h1>lorem ipsum dolor sit amet</h1>'.  
 
-Since this is my first project and I'm still learning, please contribute to this project by forking it, make good commits and then perform a pull request.
+
+### Custom route collection
+
+You can define your own route collection by implementing `RouteProviderInterface`.
+```php
+use Symfony\Component\HttpFoundation\Request;
+use Routeria\Routeria;
+use Routeria\RouteCollection;
+use Routeria\ControllerRoute;
+use Routeria\RouteProviderInterface;
+
+class BlogCollection implements RouteProviderInterface {
+  public function register(RouteCollection $collection) {
+    $blogRoutes = array(
+      'index' => new ControllerRoute('/','Blog::index','GET'),
+      'post' => new ControllerRoute('/{id:int}/{title:alnum}','Blog::showPost','GET'),
+      'page' => new ControllerRoute('/page/{title:alpha}','Blog::showPage','GET')
+      );
+
+    $collection->addRoutes($blogRoutes);
+  }
+}
+
+$request = Request::createFromGlobals();
+$router = new Routeria;
+
+$collection = new BlogCollection;
+$router->register($collection);
+$router->route($request->getPathInfo(), $request->getMethod());
+```
+You need your own blog controller to make it work.
+
+
+## Contribute to this library
+
+Please contribute to this project by forking it, make good commits and then perform a pull request.  
+Thanks for your support.
+

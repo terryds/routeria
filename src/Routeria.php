@@ -22,7 +22,7 @@ class Routeria
 
 	public function register(RouteProviderInterface $provider)
 	{
-		$this->collection->registerProvider($provider);
+		$this->collection->register($provider);
 	}
 
 	public function with($namespace, $controller, array $options) {

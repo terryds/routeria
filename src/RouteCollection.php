@@ -12,6 +12,13 @@ class RouteCollection implements \IteratorAggregate
 		$this->routes[$info['pattern']] = $route;
 	}
 
+	public function addRoutes(array $routes)
+	{
+		foreach ($routes as $route) {
+			$this->add($route);
+		}
+	}
+
 	public function merge($routes)
 	{
 		$this->routes = array_merge($this->routes, $routes);

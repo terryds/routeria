@@ -1,6 +1,8 @@
 <?php
 
+namespace Routeria;
+
 interface RouteProviderInterface
 {
-	public function register($collection);
+	public function register(RouteCollection $collection);
 }
