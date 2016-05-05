@@ -133,7 +133,7 @@ $router->route($request->getPathInfo(), $request->getMethod());
 ```
 
 The converter in this example changes all hypens into spaces in the title argument.  
-So, if you go to '/posts/lorem-ipsum-dolor-sit-amet', it will print '<h1>lorem ipsum dolor sit amet</h1>'.  
+So, if you go to '/posts/lorem-ipsum-dolor-sit-amet', it will print `<h1>lorem ipsum dolor sit amet</h1>`.  
 
 
 ### Custom route collection
