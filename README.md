@@ -126,7 +126,7 @@ use Routeria\Routeria;
 $request = Request::createFromGlobals();
 $router = new Routeria;
 $router->get('/posts/{title:alpha}', function($title) { echo '<h1>'.$title.'</h1>';})
-    ->convert(function(title) {
+    ->convert(function($title) {
       return ucwords(str_replace('-', ' ', $title));
     });
 $router->route($request->getPathInfo(), $request->getMethod());
@@ -134,6 +134,7 @@ $router->route($request->getPathInfo(), $request->getMethod());
 
 The converter in this example changes all hypens into spaces in the title argument.  
 So, if you go to '/posts/lorem-ipsum-dolor-sit-amet', it will print `<h1>lorem ipsum dolor sit amet</h1>`.  
+Notice that the argument 'lorem-ipsum-dolor-sit-amet' has been converted into 'lorem ipsum dolor sit amet' before the callback fires.
 
 
 ### Custom route collection
