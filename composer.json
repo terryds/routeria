@@ -21,7 +21,7 @@
 	"autoload": {
 		"psr-4": {
 			"Routeria\\": "src/",
-			"Routeria\\Exception": "src/Exception"
+			"Routeria\\Exception\\": "src/Exception"
 		}
 	}
 }
