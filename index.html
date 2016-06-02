@@ -1,1 +1,332 @@
-My Page
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Standard Meta -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <!-- Site Properities -->
+  <title>Routeria - Simple PHP Router</title>
+
+  <link rel="stylesheet" type="text/css" href="src/reset.css">
+  <link rel="stylesheet" type="text/css" href="src/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="src/pygments.css">
+
+  <script src="src/jquery.min.js"></script>
+
+  <style type="text/css">
+
+  body {
+    background-color: #FFFFFF;
+  }
+
+  .red {
+    color: #FF3333;
+  }
+
+  .spacing {
+    letter-spacing: 0.06em;
+  }
+
+  .spacing-big {
+    letter-spacing: 0.1em;
+  }
+
+  .masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+  }
+
+  .masthead.segment {
+    min-height: 700px;
+    padding: 1em 0em;
+  }
+
+  .masthead h1.ui.header {
+    margin-top: 5em;
+    margin-bottom: 3em;
+  }
+
+  .masthead .text.container h2 {
+    line-height: 1.5em;
+  }
+
+  .main.container {
+    margin-top: 2em;
+  }
+
+  .main.menu {
+    margin-top: 4em;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transition:
+      box-shadow 0.5s ease,
+      padding 0.5s ease
+    ;
+  }
+  .main.menu .item img.logo {
+    margin-right: 1.5em;
+  }
+
+  .overlay {
+    float: left;
+    margin: 0em 3em 1em 0em;
+  }
+  .overlay .menu {
+    position: relative;
+    left: 0;
+    transition: left 0.5s ease;
+  }
+
+  .main.menu.fixed {
+    background-color: #FFFFFF;
+    border: 1px solid #DDD;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+  }
+  .overlay.fixed .menu {
+    left: 800px;
+  }
+
+  .text.container .left.floated.image {
+    margin: 2em 2em 2em -4em;
+  }
+  .text.container .right.floated.image {
+    margin: 2em -4em 2em 2em;
+  }
+
+  .ui.footer.segment {
+    margin: 5em 0em 0em;
+    padding: 5em 0em;
+  }
+  .ui.text.container {
+    margin-top: 2em;
+  }
+
+  code.inline {
+    font-type: monospace;
+    background-color: #F0F0F0;
+  }
+
+  .line-spacing {
+    line-height: 2.5em;
+  }
+  </style>
+
+</head>
+<body>
+<div class="ui vertical masthead center aligned segment">
+  <div class="ui secondary menu">
+    <div class="header ui item">
+    <a href="#" class="red spacing-big">Routeria</a>
+    </div>
+    <a class="item" href="http://terryds.github.io/portfolio.html">
+      Other Libraries
+    </a>
+    <a class="item" href="http://terryds.github.io">
+      Author
+    </a>
+    <div class="right item">
+     <a class="ui button" href="http://github.com/terryds/ion">View on Github</a>
+    </div>
+  </div>
+  
+    <div class="ui text container">
+      <h1 class="ui red header spacing">Routeria</h1>
+      <h2>A simple and easy-to-use url router built on PHP</h2>
+    </div>
+</div>
+
+
+  <div class="ui text container">
+    <h3 class="ui red header">Installation</h3>
+
+    <p>To install <a class="ui red">Routeria</a>, you need to add it into your composer.json file</p>
+    <div class="hlcode">
+    <div class="syntax">
+    <pre><span class="p">{</span>
+      <span class="nt">"require"</span><span class="p">:</span> <span class="s2">"terrydjony/routeria"</span>
+<span class="p">}</span></pre></div>
+
+    </div>
+    <p>Or, by using terminal</p>
+    <div class="hlcode">
+    <div class="syntax"><pre><span></span><span class="n">composer</span> <span class="n">require</span> <span class="n">terrydjony</span><span class="p">/</span><span class="n">routeria</span></pre></div>
+
+    </div>
+
+    <h3 class="ui red header">Configuration</h3>
+    <p>First of all, you need to configure .htaccess file.<br> You need to turn your rewrite engine on and add rules so any requests to non-existing directory or filename will be rewritten to index.php.</p>
+    <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="nv">RewriteEngine</span> <span class="nv">On</span>
+<span class="nv">RewriteCond</span> <span class="nv">%</span><span class="p">{</span><span class="nv">REQUEST_FILENAME</span><span class="p">}</span> <span class="nv">!-d</span>
+<span class="nv">RewriteCond</span> <span class="nv">%</span><span class="p">{</span><span class="nv">REQUEST_FILENAME</span><span class="p">}</span> <span class="nv">!-f</span>
+<span class="nv">RewriteRule</span> <span class="o">^</span> <span class="nv">index.php</span> <span class="p">[</span><span class="nv">QSA</span>,<span class="nv">L</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+
+
+    <h3 class="ui red header">Usage</h3>
+    <p>In order to use the router, just instantiate the router and the request object.</p>
+    <div class="hlcode">
+    <div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+    <span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+    <span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+    <span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+    </pre></div>
+
+    </div>
+
+    <h3 class="ui red header">Simple Callback Header</h3>
+    <p>For a simple callback route, you just need to use Routeria class which belongs to the Routeria namespace.
+The Request component of Symfony HttpFoundation is required to tell the request path to the router.</p>
+    <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'Hello World'</span><span class="p">;});</span>
+
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+  <h3 class="ui red header">Using named parameters</h3>
+  <p>You can also use named parameters. To do so, you also need to declare the parameter on the callback function. <br>
+  The order of parameters in the callback doesn't matter.You just need to specify all the necessary variables.</p>
+  <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+<span class="nv">$callback</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="nv">$fname</span><span class="p">,</span> <span class="nv">$lname</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">echo</span> <span class="s2">"Hello </span><span class="si">$fname</span><span class="s2"> </span><span class="si">$lname</span><span class="s2">. Nice to meet ya!"</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/greet/{fname:alpha}/{lname:alpha}'</span><span class="p">,</span> <span class="nv">$callback</span><span class="p">);</span>
+
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+  </div>
+
+  <p>There are six placeholders available.</p>
+  <p class="line-spacing"><code class='inline'>INT</code> for integers (regex: [0-9]+)<br>
+    <code class='inline'>ALPHA</code> for alphabets (regex: [a-zA-Z_-]+)<br>
+    <code class='inline'>ALNUM</code> for alphanumeric characters (regex: [a-zA-Z0-9_-]+)<br>
+    <code class='inline'>HEX</code> for hexadecimals (regex: [0-9A-F]+)<br>
+    <code class='inline'>ALL</code> for all characters (regex: .+)<br>
+    <code class='inline'>WORD</code> is an alias for ALPHA</p>
+
+  <h3 class="ui red header">Routing Specific HTTP Method</h3>
+  <p>You can also perform a specific http method routing easily, even the custom one.<br>Different method, different route.</p>
+<div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'HTTP METHOD : GET'</span><span class="p">;});</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'HTTP METHOD : POST'</span><span class="p">;});</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">put</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'HTTP METHOD : PUT'</span><span class="p">;});</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">delete</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'HTTP METHOD : DELETE'</span><span class="p">;});</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'HTTP METHOD : CUSTOM'</span><span class="p">;},</span> <span class="s1">'CUSTOM'</span><span class="p">);</span>
+
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+</div>
+
+
+
+  <h3 class="ui red header">Dispatch controller</h3>
+  <p>You can also dispatch a controller on the route easily. Just pass 'Controller::method' as the second argument.</p>
+  <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">User</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">getInfo</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s1">'Hello '</span> <span class="o">.</span> <span class="nv">$name</span> <span class="o">.</span> <span class="s1">' ID: '</span> <span class="o">.</span> <span class="nv">$id</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/user/{name:alpha}/{id:int}'</span><span class="p">,</span> <span class="s1">'User::getInfo'</span><span class="p">);</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+  </div>
+
+  <h3 class="ui red header">Converting Arguments</h3>
+  <p>It's also easy to convert or proccess the arguments that's passed to router before it's used. This is how to do it.</p>
+ <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'/posts/{title:alpha}'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span> <span class="p">{</span> <span class="k">echo</span> <span class="s1">'&lt;h1&gt;'</span><span class="o">.</span><span class="nv">$title</span><span class="o">.</span><span class="s1">'&lt;/h1&gt;'</span><span class="p">;})</span>
+    <span class="o">-&gt;</span><span class="na">convert</span><span class="p">(</span><span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nb">ucwords</span><span class="p">(</span><span class="nb">str_replace</span><span class="p">(</span><span class="s1">'-'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="nv">$title</span><span class="p">));</span>
+    <span class="p">});</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+</div>
+<p>The converter in this example changes all hypens into spaces in the title argument.<br>
+  So, if you go to <code class="inline">/posts/lorem-ipsum-dolor-sit-amet'</code>, it will print <code class="inline">&lt;h1&gt;lorem ipsum dolor sit amet&lt;&sol;h1&gt;.</code><br>
+  Notice that the argument <code class="inline">'lorem-ipsum-dolor-sit-amet'</code> has been converted into <code class="inline">'lorem ipsum dolor sit amet'</code></p>
+
+  <h3 class="ui red header">Custom Route Collection</h3>
+  <p>You can define your own route collection by implementing RouteProviderInterface.</p>
+
+  <div class="hlcode">
+<div class="syntax"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Request</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\Routeria</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\RouteCollection</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\ControllerRoute</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Routeria\RouteProviderInterface</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BlogCollection</span> <span class="k">implements</span> <span class="nx">RouteProviderInterface</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">(</span><span class="nx">RouteCollection</span> <span class="nv">$collection</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$blogRoutes</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+      <span class="s1">'index'</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">ControllerRoute</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span><span class="s1">'Blog::index'</span><span class="p">,</span><span class="s1">'GET'</span><span class="p">),</span>
+      <span class="s1">'post'</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">ControllerRoute</span><span class="p">(</span><span class="s1">'/{id:int}/{title:alnum}'</span><span class="p">,</span><span class="s1">'Blog::showPost'</span><span class="p">,</span><span class="s1">'GET'</span><span class="p">),</span>
+      <span class="s1">'page'</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nx">ControllerRoute</span><span class="p">(</span><span class="s1">'/page/{title:alpha}'</span><span class="p">,</span><span class="s1">'Blog::showPage'</span><span class="p">,</span><span class="s1">'GET'</span><span class="p">)</span>
+      <span class="p">);</span>
+
+    <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">addRoutes</span><span class="p">(</span><span class="nv">$blogRoutes</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$request</span> <span class="o">=</span> <span class="nx">Request</span><span class="o">::</span><span class="na">createFromGlobals</span><span class="p">();</span>
+<span class="nv">$router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Routeria</span><span class="p">;</span>
+
+<span class="nv">$collection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlogCollection</span><span class="p">;</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nv">$collection</span><span class="p">);</span>
+<span class="nv">$router</span><span class="o">-&gt;</span><span class="na">route</span><span class="p">(</span><span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getPathInfo</span><span class="p">(),</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">getMethod</span><span class="p">());</span>
+</pre></div>
+
+</div>
+
+  <p>As for in this example, you need your own blog controller to make it work.</p>
+</div>
+  </div>
+  <div class="ui inverted vertical footer segment">
+    <div class="ui center aligned container">
+    <p>Routeria is brought to you by Terry Djony. It's released under MIT license.</p>
+    </div>
+  </div>
+</body></html>
